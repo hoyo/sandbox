@@ -6,10 +6,17 @@ jobs:
   slashCommandDispatch:
     runs-on: ubuntu-latest
     steps:
+      - id: branch
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "::set-output name=ref::$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
       - name: Slash Command Dispatch
         uses: peter-evans/slash-command-dispatch@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           commands: deploy
+          static-args: ref=${{ steps.branch.outputs.ref }}
           issue-type: pull-request
           dispatch-type: workflow
+          event-type-suffix: -stg
