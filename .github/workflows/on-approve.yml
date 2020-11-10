@@ -1,0 +1,33 @@
+name: workflow on approve
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - id: check
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            let state = null;
+            const { data: reviews } = await github.pulls.listReviews({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number
+            });
+            console.log(reviews);
+            reviews.forEach(review => {
+              if (review.state == 'APPROVED') {
+                state = review.state;
+              }
+            })
+            return state;
+      - run: sleep 60
+        if: steps.check.outputs.result != 'APPROVED'
+      - run: echo "executed"
