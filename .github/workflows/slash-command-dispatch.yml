@@ -11,16 +11,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           echo "::set-output name=ref::$(curl -H "Authorization: token ${GITHUB_TOKEN}" ${{ github.event.issue.pull_request.url }} | jq '.head.ref' | sed 's/\"//g')"
-      - id: scd
-        uses: peter-evans/slash-command-dispatch@v2
+      - uses: peter-evans/slash-command-dispatch@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           commands: deploy
           static-args: ref=${{ steps.branch.outputs.ref }}
           issue-type: pull-request
           dispatch-type: workflow
-      - uses: peter-evans/create-or-update-comment@v1
-        with:
-          comment-id: ${{ github.event.comment.id }}
-          body: |
-            > ${{ steps.scd.outputs.error-message }}
+          event-type-suffix: -stg
