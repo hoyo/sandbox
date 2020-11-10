@@ -19,7 +19,6 @@ jobs:
           static-args: ref=${{ steps.branch.outputs.ref }}
           issue-type: pull-request
           dispatch-type: workflow
-          event-type-suffix: -stg
       - uses: peter-evans/create-or-update-comment@v1
         with:
           comment-id: ${{ github.event.comment.id }}
