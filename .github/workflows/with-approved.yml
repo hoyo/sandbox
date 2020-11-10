@@ -32,4 +32,6 @@ jobs:
         if: steps.check.outputs.result != 'APPROVED'
         with:
           access_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: sleep 60
+        if: steps.check.outputs.result != 'APPROVED'
       - run: echo "executed"
