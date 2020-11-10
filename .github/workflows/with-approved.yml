@@ -27,11 +27,14 @@ jobs:
                 state = review.state;
               }
             })
+            if (state != 'APPROVED') {
+              await github.actions.cancelWorkflowRun({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: "${{ github.run_id }}"
+              });
+            }
             return state;
-      - uses: styfle/cancel-workflow-action@0.6.0
-        if: steps.check.outputs.result != 'APPROVED'
-        with:
-          access_token: ${{ secrets.GITHUB_TOKEN }}
       - run: sleep 60
         if: steps.check.outputs.result != 'APPROVED'
       - run: echo "executed"
