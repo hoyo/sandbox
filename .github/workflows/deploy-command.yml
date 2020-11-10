@@ -1,0 +1,11 @@
+name: workflow on approve
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.event.workflow != null || (github.event.review.state == 'approved' && github.event.pull_request.base.ref == 'main')
+    steps:
+      - run: echo "executed"
