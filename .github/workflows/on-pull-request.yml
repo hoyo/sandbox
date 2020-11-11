@@ -1,4 +1,4 @@
-name: workflow on push when approved
+name: workflow on pull request
 
 on:
   pull_request:
@@ -7,25 +7,38 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
     steps:
+      - id: script
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            let state = null;
+            const { data: workflow } = await github.actions.getWorkflow({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'deploy-stg.yml'
+            });
+            return workflow.id || '';
       - uses: 8398a7/action-slack@v3
         with:
           status: custom
-          fields: repo,message,commit,author,ref
+          fields: workflow,job,commit
           custom_payload: |
             {
               attachments: [{
-                text: '${{ github.event.repository.name }} #${{ github.event.pull_request.number }} by ${{ github.event.pull_request.user.login }}`,
-                title: '${{ github.event.pull_request.title }}',
-                title_link: '${{ github.event.pull_request.url }}',
-                callback_id: 'deploy-stg',
+                title: '${{ github.event.repository.name }}',
+                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}`,
                 color: '#ccc',
+                callback_id: '${{ github.event.pull_request.head.ref }}',
                 actions: [{
-                  name: 'deploy',
-                  text: 'deploy to staging',
+                  name: '${{ github.event.repository.name }}',
+                  text: 'Deploy to staging',
                   type: 'button',
-                  value: 'deploy-stg'
+                  value: '${{ steps.script.outputs.result }}'
                 }]
               }]
             }
+        if: steps.script.outputs.result != ''
