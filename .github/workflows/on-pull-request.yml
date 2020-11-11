@@ -9,6 +9,7 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
+      - run: echo "${{ github.event.action }}"
       - uses: 8398a7/action-slack@v3
         with:
           status: custom
