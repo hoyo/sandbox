@@ -29,7 +29,10 @@ jobs:
             {
               attachments: [{
                 title: '[${{ github.event.repository.name }}] <${{ github.event.pull_request.url }}|${{ github.event.pull_request.title }}> #${{ github.event.pull_request.number }}',
-                text: '${{ github.event.pull_request.body }}',
+                text: {
+                  type: 'mrkdwn',
+                  text: '>${{ github.event.pull_request.body }}',
+                },
                 color: '#ccc',
                 callback_id: '${{ github.event.pull_request.head.ref }}',
                 actions: [{
