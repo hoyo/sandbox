@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
     steps:
       - id: script
         uses: actions/github-script@v3
@@ -27,7 +27,6 @@ jobs:
           status: custom
           custom_payload: |
             {
-              text: 'デプロイしますか？',
               attachments: [{
                 text: '${{ github.event.pull_request.title }}',
                 title: '[${{ github.event.repository.name }}] #${{ github.event.pull_request.number }}',
