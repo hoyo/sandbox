@@ -1,0 +1,31 @@
+name: workflow on push when approved
+
+on:
+  pull_request:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+    steps:
+      - uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: repo,message,commit,author,ref
+          custom_payload: |
+            {
+              attachments: [{
+                text: '${{ github.event.repository.name }} #${{ github.event.pull_request.number }} by ${{ github.event.pull_request.user.login }}`,
+                title: '${{ github.event.pull_request.title }}',
+                title_link: '${{ github.event.pull_request.url }}',
+                callback_id: 'deploy-stg',
+                color: '#ccc',
+                actions: [{
+                  name: 'deploy',
+                  text: 'deploy to staging',
+                  type: 'button',
+                  value: 'deploy-stg'
+                }]
+              }]
+            }
