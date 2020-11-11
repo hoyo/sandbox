@@ -9,6 +9,20 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
+      - id: script
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            let state = null;
+            const { data: workflow } = await github.actions.getWorkflow({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_file_name: 'deploy-stg.yml'
+            });
+            console.log(workflow);
+            return workflow.id || '';
       - uses: 8398a7/action-slack@v3
         with:
           status: custom
@@ -19,13 +33,14 @@ jobs:
                 text: '${{ github.event.pull_request.title }}',
                 title: '[${{ github.event.repository.name }}] #${{ github.event.pull_request.number }}',
                 title_link: '${{ github.event.pull_request.url }}',
-                callback_id: 'deploy-stg',
+                callback_id: '${{ steps.script.outputs.result }}',
                 color: '#ccc',
                 actions: [{
-                  name: 'deploy',
+                  name: '${{ github.event.repository.name }}',
                   text: 'deploy to staging',
                   type: 'button',
-                  value: 'deploy-stg'
+                  value: '${{ github.event.pull_request.head.ref }}'
                 }]
               }]
             }
+        if: steps.script.outputs.result != ''
