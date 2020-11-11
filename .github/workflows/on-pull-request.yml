@@ -28,14 +28,13 @@ jobs:
           custom_payload: |
             {
               attachments: [{
-                text: '${{ github.event.pull_request.title }}',
-                title: '[${{ github.event.repository.name }}] #${{ github.event.pull_request.number }}',
-                title_link: '${{ github.event.pull_request.url }}',
-                callback_id: '${{ github.event.pull_request.head.ref }}',
+                title: '[${{ github.event.repository.name }}] <${{ github.event.pull_request.url }}|${{ github.event.pull_request.title }}> #${{ github.event.pull_request.number }}',
+                text: '${{ github.event.pull_request.body }}',
                 color: '#ccc',
+                callback_id: '${{ github.event.pull_request.head.ref }}',
                 actions: [{
                   name: '${{ github.event.repository.name }}',
-                  text: 'deploy to staging',
+                  text: 'Deploy to staging',
                   type: 'button',
                   value: '${{ steps.script.outputs.result }}'
                 }]
