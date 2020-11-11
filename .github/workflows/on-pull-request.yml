@@ -21,14 +21,13 @@ jobs:
               repo: context.repo.repo,
               workflow_id: 'deploy-stg.yml'
             });
-            console.log(workflow);
             return workflow.id || '';
       - uses: 8398a7/action-slack@v3
         with:
           status: custom
-          fields: repo,message,commit,author,ref
           custom_payload: |
             {
+              text: 'デプロイしますか？',
               attachments: [{
                 text: '${{ github.event.pull_request.title }}',
                 title: '[${{ github.event.repository.name }}] #${{ github.event.pull_request.number }}',
