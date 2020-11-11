@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
     steps:
       - id: script
         uses: actions/github-script@v3
