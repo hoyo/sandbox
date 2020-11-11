@@ -7,7 +7,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+      SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
     steps:
       - id: script
         uses: actions/github-script@v3
@@ -25,11 +25,12 @@ jobs:
       - uses: 8398a7/action-slack@v3
         with:
           status: custom
+          fields: workflow,job,commit
           custom_payload: |
             {
               attachments: [{
                 title: '${{ github.event.repository.name }}',
-                text: '${{ github.event.action }} <${{ github.event.pull_request.html_url }}|${{ github.event.pull_request.title }}> #${{ github.event.number }}',
+                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}`,
                 color: '#ccc',
                 callback_id: '${{ github.event.pull_request.head.ref }}',
                 actions: [{
