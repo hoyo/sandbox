@@ -1,4 +1,4 @@
-name: workflow on push when approved
+name: workflow on pull request
 
 on:
   pull_request:
