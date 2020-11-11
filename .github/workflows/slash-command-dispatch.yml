@@ -14,8 +14,8 @@ jobs:
       - uses: peter-evans/slash-command-dispatch@v2
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
-          commands: deploy
+          commands: deploy-stg
           static-args: ref=${{ steps.branch.outputs.ref }}
           issue-type: pull-request
           dispatch-type: workflow
-          event-type-suffix: -stg
+          event-type-suffix: ""
