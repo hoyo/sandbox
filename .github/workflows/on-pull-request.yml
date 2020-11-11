@@ -19,7 +19,7 @@ jobs:
             const { data: workflow } = await github.actions.getWorkflow({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              workflow_file_name: 'deploy-stg.yml'
+              workflow_id: 'deploy-stg.yml'
             });
             console.log(workflow);
             return workflow.id || '';
