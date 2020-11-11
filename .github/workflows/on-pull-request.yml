@@ -33,13 +33,13 @@ jobs:
                 text: '${{ github.event.pull_request.title }}',
                 title: '[${{ github.event.repository.name }}] #${{ github.event.pull_request.number }}',
                 title_link: '${{ github.event.pull_request.url }}',
-                callback_id: '${{ steps.script.outputs.result }}',
+                callback_id: '${{ github.event.pull_request.head.ref }}',
                 color: '#ccc',
                 actions: [{
                   name: '${{ github.event.repository.name }}',
                   text: 'deploy to staging',
                   type: 'button',
-                  value: '${{ github.event.pull_request.head.ref }}'
+                  value: '${{ steps.script.outputs.result }}'
                 }]
               }]
             }
