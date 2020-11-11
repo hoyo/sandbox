@@ -16,8 +16,8 @@ jobs:
           custom_payload: |
             {
               attachments: [{
-                text: '${{ github.event.repository.name }} #${{ github.event.pull_request.number }} by ${{ github.event.pull_request.user.login }}`,
-                title: '${{ github.event.pull_request.title }}',
+                text: '${{ github.event.pull_request.title }}',
+                title: '[${{ github.event.repository.name }}] #${{ github.event.pull_request.number }}',
                 title_link: '${{ github.event.pull_request.url }}',
                 callback_id: 'deploy-stg',
                 color: '#ccc',
