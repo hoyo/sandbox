@@ -2,6 +2,11 @@ name: workflow on push when approved
 
 on:
   pull_request:
+    branches:
+      - main
+    types: [opened, synchronized]
+    paths:
+      - 'staging/**'
 
 defaults:
   run:

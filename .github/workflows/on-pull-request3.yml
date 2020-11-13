@@ -2,6 +2,10 @@ name: workflow on push when approved
 
 on:
   pull_request:
+    branches:
+      - main
+    paths:
+      - 'staging/**'
 
 defaults:
   run:
