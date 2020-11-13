@@ -1,4 +1,4 @@
-name: workflow on push when approved
+name: pr3
 
 on:
   pull_request:
