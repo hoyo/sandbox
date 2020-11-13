@@ -2,6 +2,7 @@ name: pr1
 
 on:
   pull_request:
+    types: [opened, synchronized]
 
 defaults:
   run:
