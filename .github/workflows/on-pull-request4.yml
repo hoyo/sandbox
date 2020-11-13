@@ -1,7 +1,8 @@
-name: workflow on push when approved
+name: pr4
 
 on:
   pull_request:
+    types: [opened, synchronized]
     paths:
       - 'staging/**'
 

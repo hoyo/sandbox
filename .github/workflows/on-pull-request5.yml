@@ -1,11 +1,10 @@
-name: workflow on push when approved
+name: pr5
 
 on:
   pull_request:
+    types: [opened, synchronized]
     branches:
       - main
-    paths:
-      - 'staging/**'
 
 defaults:
   run:
