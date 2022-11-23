@@ -42,7 +42,7 @@ jobs:
         id: check_diff
         run: |
           file_count=$(git status --porcelain docs/schema | wc -l)
-          echo "::set-output name=file_count::$file_count"
+          echo "file_count=$file_count" >> $GITHUB_OUTPUT
       - name: Commit ER graph
         if: ${{ steps.check_diff.outputs.file_count != '0' }}
         run: |
