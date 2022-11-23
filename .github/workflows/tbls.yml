@@ -51,6 +51,6 @@ jobs:
           git add docs/schema
           git checkout -b fix/tbls
           git commit -m "docs: generate er graphs from actions"
-          git push
+          git push --set-upstream origin fix/tbls
           gh pr create -B main -H fix/tbls -t "Update table schema" -b ""
 
