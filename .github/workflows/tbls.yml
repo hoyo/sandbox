@@ -51,15 +51,5 @@ jobs:
           git checkout -b fix/tbls
           git commit -m "docs: generate er graphs from actions"
           git push
-          gh pr create -B main -t "Update table schema"
-      - name: Report commit on pull request
-        if: ${{ steps.check_diff.outputs.file_count != '0' }}
-        uses: actions/github-script@v6
-        with:
-          script: |
-            github.rest.issues.createComment({
-              issue_number: context.issue.number,
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              body: 'Actions committed new ER files'
-            })
+          gh pr create -B main -H fix/tbls -t "Update table schema" -b ""
+
