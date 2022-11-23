@@ -2,7 +2,7 @@ name: Generate DB Schema Documents
 
 on:
   schedule:
-    - cron:  '20 9 * * 3'
+    - cron:  '25 10 * * 3'
   workflow_dispatch:
 
 permissions:
@@ -46,8 +46,10 @@ jobs:
       - name: Commit ER graph
         if: ${{ steps.check_diff.outputs.file_count != '0' }}
         run: |
-          git add docs/schema
+          git config user.name github-actions
+          git config user.email github-actions@github.com
           git checkout -b fix/tbls
+          git add docs/schema
           git commit -m "docs: generate er graphs from actions"
           git push --set-upstream origin fix/tbls
           gh pr create -B main -H fix/tbls -t "Update table schema" -b ""
