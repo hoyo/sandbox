@@ -1,0 +1,55 @@
+name: Generate DB Schema Documents
+
+on:
+  schedule:
+    - cron:  '0 9 * * 3'
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  tbls:
+    name: Generate Documents
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        options: --health-cmd "mysqladmin ping" --health-interval 10s --health-timeout 5s --health-retries 10
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: db 
+          MYSQL_USER: tbls
+          MYSQL_PASSWORD: tbls
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Execute migration
+        run: |
+          curl -sOL https://github.com/k0kubun/sqldef/releases/latest/download/mysqldef_linux_amd64.tar.gz
+          tar xf mysqldef_linux_amd64.tar.gz
+          MYSQL_PWD=tbls ./mysqldef --user=tbls --host=127.0.0.1 --file=db/schema/table.sql db
+      - name: Execute tbls
+        run: |
+          curl -sL https://git.io/use-tbls > use-tbls.tmp
+          . ./use-tbls.tmp
+          rm ./use-tbls.tmp
+          TBLS_DSN=mysql://tbls:tbls@127.0.0.1:3306/db tbls doc -f
+      - name: Count uncommit files
+        id: check_diff
+        run: |
+          file_count=$(git status --porcelain docs/schema | wc -l)
+          echo "::set-output name=file_count::$file_count"
+      - name: Commit ER graph
+        if: ${{ steps.check_diff.outputs.file_count != '0' }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add docs/schema
+          git checkout -b fix/tbls
+          git commit -m "docs: generate er graphs from actions"
+          git push
+          gh pr create -B main -H fix/tbls -t "Update table schema" -b ""
+
