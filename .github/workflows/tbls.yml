@@ -1,8 +1,6 @@
 name: Generate DB Schema Documents
 
 on:
-  schedule:
-    - cron:  '45 11 * * 3'
   workflow_dispatch:
 
 permissions:
@@ -48,10 +46,11 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          git checkout -b fix/tbls
           git add docs/schema
           git commit -m "docs: generate er graphs from actions"
-          git push -f --set-upstream origin fix/tbls
-          gh pr create -B main -H fix/tbls -t "Update table schema" -b ""
+          commit_hash=`git rev-parse HEAD | cut -c 1-7`
+          git checkout -b fix/tbls-${commit_hash}
+          git push -f --set-upstream origin fix/tbls-${commit_hash}
+          gh pr create -B main -H fix/tbls-${commit_hash} -t "Update table schema" -b ""
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
