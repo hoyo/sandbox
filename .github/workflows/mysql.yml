@@ -1,0 +1,28 @@
+name: mysql test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  mysql:
+    name: init
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_ROOT_USER: root
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+    steps:
+      - uses: actions/checkout@v3
+      - run: mysql -u root -proot test_db < ./db/0_schema.sql
+      - run: mysql -u root -proot test_db < ./db/1_seed.sql
+
