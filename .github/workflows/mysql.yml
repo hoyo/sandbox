@@ -23,6 +23,6 @@ jobs:
           --health-retries=3
     steps:
       - uses: actions/checkout@v3
-      - run: mysql -u root -proot test_db < ./db/0_schema.sql
-      - run: mysql -u root -proot test_db < ./db/1_seed.sql
+      - run: mysql -u root -proot test_db --protocol tcp < ./db/0_schema.sql
+      - run: mysql -u root -proot test_db --protocol tcp < ./db/1_seed.sql
 
